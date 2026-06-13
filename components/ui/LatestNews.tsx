@@ -61,7 +61,7 @@ export function LatestNews() {
   return (
     <section className="bg-[#f9f9f9] py-10 sm:py-14" aria-labelledby="latest-news-heading">
       <div className={siteContainerClass}>
-        <div className="mb-8 border-b border-[#ececec] pb-6 text-center sm:mb-10">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 border-b border-[#ececec] pb-6 sm:mb-10">
           <p
             id="latest-news-heading"
             className="m-0 font-serif text-[1.05rem] italic text-primary sm:text-[1.15rem]"
@@ -69,7 +69,7 @@ export function LatestNews() {
             — what&apos;s new
           </p>
           <p
-            className="news-outline-title mx-auto mt-3 w-fit text-[clamp(2.25rem,5vw,3.75rem)] font-bold uppercase leading-none tracking-[0.14em]"
+            className="news-outline-title text-[clamp(2.25rem,5vw,3.75rem)] font-bold uppercase leading-none tracking-[0.14em]"
             aria-hidden="true"
           >
             NEWS
