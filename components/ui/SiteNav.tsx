@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { navLinks } from "@/lib/content";
 import { siteContainerClass } from "@/lib/site-container";
@@ -28,13 +28,19 @@ export function SiteNav() {
   const navRef = useRef<HTMLElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const [pinned, setPinned] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setMenuOpen(false);
+  }
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -59,10 +65,6 @@ export function SiteNav() {
       observer.disconnect();
       window.removeEventListener("resize", syncHeight);
     };
-  }, [pathname]);
-
-  useEffect(() => {
-    setMenuOpen(false);
   }, [pathname]);
 
   useEffect(() => {
