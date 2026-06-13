@@ -281,7 +281,7 @@ export function HeroGallery() {
               onClick={() => goToSlide(index)}
               className={`pointer-events-auto rounded-xl transition-all ${
                 active
-                  ? "h-12 w-2.5 bg-accent shadow-[0_0_0_1px_rgba(255,255,255,0.5)] ring-2 ring-white/40"
+                  ? "h-12 w-2.5 bg-primary-light shadow-[0_0_0_1px_rgba(255,255,255,0.35)] ring-2 ring-white/25"
                   : "h-2.5 w-2.5 bg-white/45 hover:bg-primary-light/90"
               }`}
               aria-label={`Go to slide ${index + 1}`}

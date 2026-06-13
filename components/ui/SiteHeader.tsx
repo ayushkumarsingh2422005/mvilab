@@ -15,7 +15,7 @@ export function SiteHeader() {
             href={siteLinks.official}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex shrink-0 cursor-pointer items-center font-semibold leading-none !text-[#1565c0] no-underline transition-colors hover:!text-[#0d47a1] max-lg:min-w-0 max-lg:flex-[0_1_auto] max-lg:text-[0.78rem] max-sm:text-xs"
+            className="inline-flex shrink-0 cursor-pointer items-center font-semibold leading-none !text-primary no-underline transition-colors hover:!text-primary-dark max-lg:min-w-0 max-lg:flex-[0_1_auto] max-lg:text-[0.78rem] max-sm:text-xs"
           >
             MVI Lab Portal
           </a>
@@ -78,7 +78,7 @@ export function SiteHeader() {
               </div>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-full bg-blue px-[26px] py-2.5 text-[0.9rem] font-semibold text-white transition-[filter,transform] duration-150 hover:-translate-y-px hover:brightness-105"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-full border border-primary/25 bg-primary-light px-[26px] py-2.5 text-[0.9rem] font-semibold text-primary-dark transition-[filter,transform,background-color] duration-150 hover:-translate-y-px hover:bg-primary-light/80"
               >
                 Services
               </Link>

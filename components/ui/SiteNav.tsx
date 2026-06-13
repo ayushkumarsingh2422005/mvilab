@@ -12,7 +12,7 @@ function navLinkClasses(active: boolean) {
     "flex items-center whitespace-nowrap border-b-[3px] px-[18px] py-3 text-[0.92rem] font-medium text-white transition-colors hover:bg-white/10";
 
   return active
-    ? `${base} border-b-accent bg-transparent text-accent`
+    ? `${base} border-b-primary-light bg-transparent text-primary-light`
     : `${base} border-b-transparent`;
 }
 

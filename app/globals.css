@@ -4,8 +4,8 @@
   --color-primary: #0d7c8c;
   --color-primary-dark: #0a5f6b;
   --color-primary-light: #e0f2f5;
-  --color-blue: #1976d2;
-  --color-accent: #ffca28;
+  --color-secondary: #0f6b7a;
+  --color-accent: #a8dce6;
 }
 
 @layer base {
