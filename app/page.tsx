@@ -1,18 +1,21 @@
 import { HeroGallery } from "@/components/ui/HeroGallery";
-import { siteContainerClass } from "@/lib/site-container";
+import { LabCapabilities } from "@/components/ui/LabCapabilities";
+import { LabGroupPhoto } from "@/components/ui/LabGroupPhoto";
+import { LatestNews } from "@/components/ui/LatestNews";
+import { NewsTicker } from "@/components/ui/NewsTicker";
+import { WelcomeSection } from "@/components/ui/WelcomeSection";
 
 export default function Home() {
   return (
     <>
       <HeroGallery />
+      <NewsTicker />
 
-      <main id="main-content" className="min-h-[60vh] py-10">
-        <div className={siteContainerClass}>
-          <h1 className="mb-5 text-[2.5rem] text-primary">Welcome to MVI Lab</h1>
-          <p className="text-[1.1rem] leading-relaxed text-[#555]">
-            Machine Vision and Intelligence Lab
-          </p>
-        </div>
+      <main id="main-content">
+        <WelcomeSection />
+        <LatestNews />
+        <LabCapabilities />
+        <LabGroupPhoto />
       </main>
     </>
   );

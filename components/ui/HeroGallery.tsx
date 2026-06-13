@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { heroImages, type HeroSlide } from "@/lib/hero-images";
 
 const NAV_BTN_CLASS =
-  "pointer-events-auto flex size-12 cursor-pointer items-center justify-center rounded-xl border border-white/30 bg-primary/90 text-white shadow-[0_4px_14px_rgba(10,95,107,0.35)] backdrop-blur-sm transition hover:border-white/50 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40";
+  "pointer-events-auto flex size-12 cursor-pointer items-center justify-center rounded-xl border border-white/30 bg-primary/90 text-white shadow-[0_4px_14px_rgba(10,95,107,0.35)] backdrop-blur-sm transition hover:border-white/50 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40 max-sm:size-10 max-sm:rounded-lg max-sm:shadow-[0_2px_10px_rgba(10,95,107,0.3)]";
 
 const SLIDE_MS = 700;
 
@@ -44,8 +44,9 @@ function getVisualIndex(positionIndex: number, totalSlides: number, extendedLeng
   return positionIndex - 1;
 }
 
-const DESKTOP_IMAGE_SIZES = "(min-width: 1024px) 100vw, 0px";
-const MOBILE_IMAGE_SIZES = "(max-width: 1023px) 100vw, 0px";
+const HERO_DESKTOP_MIN_WIDTH = 1280;
+const DESKTOP_IMAGE_SIZES = `(min-width: ${HERO_DESKTOP_MIN_WIDTH}px) 100vw, 0px`;
+const MOBILE_IMAGE_SIZES = `(max-width: ${HERO_DESKTOP_MIN_WIDTH - 1}px) 100vw, 0px`;
 
 function HeroSlideImage({ slide, priority }: { slide: HeroSlide; priority?: boolean }) {
   const desktopPosition = slide.desktopObjectPosition ?? "center center";
@@ -61,7 +62,7 @@ function HeroSlideImage({ slide, priority }: { slide: HeroSlide; priority?: bool
         priority={priority}
         loading={loading}
         sizes={DESKTOP_IMAGE_SIZES}
-        className="hidden object-cover lg:block"
+        className="hidden object-cover xl:block"
         style={{ objectPosition: desktopPosition }}
       />
       <Image
@@ -71,7 +72,7 @@ function HeroSlideImage({ slide, priority }: { slide: HeroSlide; priority?: bool
         priority={priority}
         loading={loading}
         sizes={MOBILE_IMAGE_SIZES}
-        className="object-cover lg:hidden"
+        className="object-cover xl:hidden"
         style={{ objectPosition: mobilePosition }}
       />
     </>
@@ -212,6 +213,13 @@ export function HeroGallery() {
     const syncHeight = () => {
       const header = document.querySelector("header");
       if (!header) return;
+
+      const isDesktop = window.matchMedia(`(min-width: ${HERO_DESKTOP_MIN_WIDTH}px)`).matches;
+      if (!isDesktop) {
+        setHeroHeight(null);
+        return;
+      }
+
       setHeroHeight(Math.max(0, window.innerHeight - header.getBoundingClientRect().height));
     };
 
@@ -246,8 +254,8 @@ export function HeroGallery() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-primary-dark"
-      style={{ height: heroHeight ?? "calc(100dvh - 200px)" }}
+      className="relative w-full overflow-hidden bg-primary-dark max-xl:aspect-[4/3] max-xl:!h-auto xl:min-h-[calc(100dvh-200px)]"
+      style={heroHeight !== null ? { height: heroHeight } : undefined}
       aria-roledescription="carousel"
       aria-label="Hero gallery"
     >
@@ -279,10 +287,10 @@ export function HeroGallery() {
               key={image.id}
               type="button"
               onClick={() => goToSlide(index)}
-              className={`pointer-events-auto rounded-xl transition-all ${
+              className={`pointer-events-auto rounded-xl transition-all max-sm:rounded-lg ${
                 active
-                  ? "h-12 w-2.5 bg-primary-light shadow-[0_0_0_1px_rgba(255,255,255,0.35)] ring-2 ring-white/25"
-                  : "h-2.5 w-2.5 bg-white/45 hover:bg-primary-light/90"
+                  ? "h-12 w-2.5 bg-primary-light shadow-[0_0_0_1px_rgba(255,255,255,0.35)] ring-2 ring-white/25 max-sm:h-8 max-sm:w-2 max-sm:ring-1"
+                  : "h-2.5 w-2.5 bg-white/45 hover:bg-primary-light/90 max-sm:h-2 max-sm:w-2"
               }`}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={active ? "true" : undefined}
@@ -292,7 +300,7 @@ export function HeroGallery() {
       </div>
 
       <div
-        className="absolute right-4 bottom-4 z-40 flex flex-row gap-2 sm:right-6 sm:bottom-6"
+        className="absolute right-4 bottom-4 z-40 flex flex-row gap-2 max-sm:right-3 max-sm:bottom-3 max-sm:gap-1.5 sm:right-6 sm:bottom-6"
         aria-label="Gallery navigation"
       >
         <button
@@ -302,7 +310,7 @@ export function HeroGallery() {
           className={NAV_BTN_CLASS}
           aria-label="Previous slide"
         >
-          <ChevronLeftIcon className="size-5" />
+          <ChevronLeftIcon className="size-5 max-sm:size-4" />
         </button>
         <button
           type="button"
@@ -311,7 +319,7 @@ export function HeroGallery() {
           className={NAV_BTN_CLASS}
           aria-label="Next slide"
         >
-          <ChevronRightIcon className="size-5" />
+          <ChevronRightIcon className="size-5 max-sm:size-4" />
         </button>
       </div>
 

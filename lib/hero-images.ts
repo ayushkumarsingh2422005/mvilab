@@ -29,5 +29,5 @@ export const HERO_IMAGE_DIRS = {
 
 export const HERO_ART_SPECS = {
   desktop: { ratio: "2 / 1", example: "2400 × 1200 px" },
-  mobile: { ratio: "3 / 4", example: "1080 × 1440 px" },
+  mobile: { ratio: "4 / 3", example: "1600 × 1200 px" },
 } as const;

@@ -9,16 +9,16 @@ import { siteContainerClass } from "@/lib/site-container";
 
 function navLinkClasses(active: boolean) {
   const base =
-    "flex items-center whitespace-nowrap border-b-[3px] px-[18px] py-3 text-[0.92rem] font-medium text-white transition-colors hover:bg-white/10";
+    "flex h-full items-center whitespace-nowrap px-3 py-3 font-serif text-[0.78rem] font-medium uppercase tracking-[0.08em] text-white transition-colors hover:bg-white/10 lg:px-4 lg:text-[0.82rem]";
 
   return active
-    ? `${base} border-b-primary-light bg-transparent text-primary-light`
-    : `${base} border-b-transparent`;
+    ? `${base} shadow-[inset_0_-3px_0_var(--color-primary-light)] text-primary-light`
+    : `${base} shadow-[inset_0_-3px_0_transparent]`;
 }
 
 function drawerLinkClasses(active: boolean) {
   const base =
-    "block border-b border-[#ececec] px-[18px] py-3.5 text-[0.92rem] font-medium text-[#333] hover:bg-[#f5f5f5]";
+    "block border-b border-[#ececec] px-[18px] py-3.5 font-serif text-[0.92rem] font-medium uppercase tracking-[0.06em] text-[#333] hover:bg-[#f5f5f5]";
 
   return active ? `${base} bg-primary-light font-semibold text-primary-dark` : base;
 }
@@ -151,7 +151,7 @@ export function SiteNav() {
             {navLinks.map((link) => {
               const active = pathname === link.href;
               return (
-                <li key={link.href}>
+                <li key={link.href} className="flex">
                   <Link href={link.href} className={navLinkClasses(active)}>
                     {link.label}
                   </Link>
