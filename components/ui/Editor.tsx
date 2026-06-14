@@ -4,7 +4,7 @@ import { ChaiBuilderEditor } from "@chaibuilder/sdk";
 import { loadWebBlocks } from "@chaibuilder/sdk/web-blocks";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
 import "@/lib/chaibuilder/setup";
-import "@chaibuilder/sdk/styles";
+import { useChaiBuilderEditorStyles } from "@/lib/chaibuilder/use-chaibuilder-editor-styles";
 import { useState } from "react";
 
 loadWebBlocks();
@@ -21,6 +21,7 @@ function readSavedBlocks(): ChaiBlock[] {
 }
 
 export function PageEditor() {
+  useChaiBuilderEditorStyles();
   const [blocks, setBlocks] = useState<ChaiBlock[]>(readSavedBlocks);
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
-import "@chaibuilder/sdk/styles";
+import "@/styles/chaibuilder.scoped.css";
 import { loadWebBlocks } from "@chaibuilder/sdk/web-blocks";
 import dynamic from "next/dynamic";
 
@@ -31,7 +31,7 @@ export function NewsPageRenderer({ blocks }: NewsPageRendererProps) {
   }
 
   return (
-    <div className="news-page-content">
+    <div className="mvilab-chaibuilder-root news-page-content">
       <RenderChaiBlocks blocks={blocks} />
     </div>
   );

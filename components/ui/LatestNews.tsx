@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { formatNewsListDate, type NewsArticleItem } from "@/lib/news";
+import { formatNewsListDate, type NewsArticleListItem } from "@/lib/news";
 import { siteContainerClass } from "@/lib/site-container";
 
-function NewsListItem({ article }: { article: NewsArticleItem }) {
+function NewsListItem({ article }: { article: NewsArticleListItem }) {
   return (
     <li className="border-b border-[#e4e4e4] last:border-b-0">
       <div className="grid grid-cols-1 gap-3 py-5 sm:grid-cols-[7.5rem_1fr_auto] sm:items-start sm:gap-6 sm:py-6">
@@ -42,7 +42,7 @@ function NewsListItem({ article }: { article: NewsArticleItem }) {
 }
 
 type LatestNewsProps = {
-  articles: NewsArticleItem[];
+  articles: NewsArticleListItem[];
 };
 
 export function LatestNews({ articles }: LatestNewsProps) {

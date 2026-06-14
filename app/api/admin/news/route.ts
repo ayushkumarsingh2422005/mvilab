@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/auth/api";
 import { connectDb } from "@/lib/db/mongoose";
 import { NewsArticle } from "@/lib/models/NewsArticle";
-import { getAllNewsArticles, serializeNewsArticle } from "@/lib/news";
+import { getNewsArticlesForAdminList, serializeNewsArticle } from "@/lib/news";
 import {
   createNewsArticleSchema,
   normalizeNewsArticleInput,
@@ -12,7 +12,7 @@ export async function GET() {
   const auth = await requireSession("admin");
   if (auth.error) return auth.error;
 
-  const articles = await getAllNewsArticles();
+  const articles = await getNewsArticlesForAdminList();
   return NextResponse.json({ ok: true, articles });
 }
 

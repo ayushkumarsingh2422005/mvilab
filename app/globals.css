@@ -298,3 +298,18 @@
   color: transparent;
   -webkit-text-stroke: 2px var(--color-primary);
 }
+
+/* Keep site chrome stable while ChaiBuilder editor CSS is loaded */
+html.mvilab-chaibuilder-active body {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  background-color: #f9f9f9 !important;
+  color: #333 !important;
+}
+
+.mvilab-editor-chrome,
+.mvilab-editor-chrome * {
+  box-sizing: border-box;
+}

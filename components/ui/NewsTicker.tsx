@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { RiMegaphoneLine } from "react-icons/ri";
-import { getTickerNewsArticles, type NewsArticleItem } from "@/lib/news";
+import { getTickerNewsArticles, type NewsArticleListItem } from "@/lib/news";
 
 type NewsTickerProps = {
-  articles: NewsArticleItem[];
+  articles: NewsArticleListItem[];
 };
 
 export function NewsTicker({ articles }: NewsTickerProps) {

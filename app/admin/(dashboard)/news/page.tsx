@@ -1,13 +1,13 @@
 import { NewsManager } from "@/components/admin/NewsManager";
 import { DashboardPageHeader, DashboardWorkspace } from "@/components/dashboard/DashboardPage";
-import { getAllNewsArticles } from "@/lib/news";
+import { getNewsArticlesForAdminList } from "@/lib/news";
 
 export const metadata = {
   title: "News — MVI Lab Admin",
 };
 
 export default async function AdminNewsPage() {
-  const articles = await getAllNewsArticles();
+  const articles = await getNewsArticlesForAdminList();
 
   return (
     <>

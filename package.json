@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run build:chaibuilder-css && next dev",
+    "build": "npm run build:chaibuilder-css && next build",
+    "build:chaibuilder-css": "node scripts/build-chaibuilder-css.mjs",
     "start": "next start",
     "lint": "eslint",
     "seed:admin": "tsx scripts/seed-admin.ts"
@@ -29,6 +30,8 @@
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "postcss": "^8.5.15",
+    "postcss-prefix-selector": "^2.1.1",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5"

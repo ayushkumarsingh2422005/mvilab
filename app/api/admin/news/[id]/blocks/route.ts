@@ -32,6 +32,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     article.blocks = parsed.data.blocks;
+    article.markModified("blocks");
     await article.save();
 
     return NextResponse.json({

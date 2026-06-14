@@ -14,7 +14,7 @@ import { AssetImagePicker } from "@/components/admin/AssetImagePicker";
 import { Modal, ModalActions, ModalAlert } from "@/components/ui/Modal";
 import type { AssetDirectoryListing } from "@/lib/assets/list";
 import { NEWS_CATEGORIES, type NewsCategory } from "@/lib/news-categories";
-import type { NewsArticleItem } from "@/lib/news";
+import type { NewsArticleListItem } from "@/lib/news";
 
 type NewsFormState = {
   title: string;
@@ -41,7 +41,7 @@ function emptyForm(): NewsFormState {
   };
 }
 
-function formFromArticle(article: NewsArticleItem): NewsFormState {
+function formFromArticle(article: NewsArticleListItem): NewsFormState {
   return {
     title: article.title,
     slug: article.slug,
@@ -63,7 +63,7 @@ function slugify(value: string) {
 }
 
 type NewsManagerProps = {
-  initialArticles: NewsArticleItem[];
+  initialArticles: NewsArticleListItem[];
 };
 
 export function NewsManager({ initialArticles }: NewsManagerProps) {
@@ -127,7 +127,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     setOpen(true);
   }
 
-  function openEdit(article: NewsArticleItem) {
+  function openEdit(article: NewsArticleListItem) {
     setEditingId(article.id);
     setForm(formFromArticle(article));
     setSlugTouched(true);
@@ -275,7 +275,7 @@ export function NewsManager({ initialArticles }: NewsManagerProps) {
     }
   }
 
-  async function handleDelete(article: NewsArticleItem) {
+  async function handleDelete(article: NewsArticleListItem) {
     const confirmed = window.confirm(`Delete "${article.title}"? This cannot be undone.`);
     if (!confirmed) return;
 

@@ -5,7 +5,7 @@ import type { NewsCategory } from "@/lib/news-categories";
 
 export type { NewsCategory };
 
-export type NewsArticleItem = {
+export type NewsArticleListItem = {
   id: string;
   title: string;
   slug: string;
@@ -15,9 +15,12 @@ export type NewsArticleItem = {
   isPublished: boolean;
   isNew: boolean;
   thumbnailUrl?: string;
-  blocks: ChaiBlock[];
   createdAt: string;
   updatedAt: string;
+};
+
+export type NewsArticleItem = NewsArticleListItem & {
+  blocks: ChaiBlock[];
 };
 
 type NewsDoc = {
@@ -41,7 +44,7 @@ function toIsoString(value: Date | string | undefined | null) {
   return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString();
 }
 
-export function serializeNewsArticle(article: NewsDoc): NewsArticleItem {
+export function serializeNewsArticleList(article: NewsDoc): NewsArticleListItem {
   return {
     id: article._id.toString(),
     title: article.title,
@@ -52,10 +55,25 @@ export function serializeNewsArticle(article: NewsDoc): NewsArticleItem {
     isPublished: article.isPublished,
     isNew: article.isNew,
     thumbnailUrl: article.thumbnailUrl ?? undefined,
-    blocks: Array.isArray(article.blocks) ? article.blocks : [],
     createdAt: toIsoString(article.createdAt),
     updatedAt: toIsoString(article.updatedAt ?? article.createdAt),
   };
+}
+
+export function serializeNewsArticle(article: NewsDoc): NewsArticleItem {
+  return {
+    ...serializeNewsArticleList(article),
+    blocks: Array.isArray(article.blocks) ? article.blocks : [],
+  };
+}
+
+export async function getNewsArticlesForAdminList() {
+  await connectDb();
+  const articles = await NewsArticle.find()
+    .select("-blocks")
+    .sort({ publishedAt: -1, createdAt: -1 })
+    .lean();
+  return articles.map((article) => serializeNewsArticleList(article as NewsDoc));
 }
 
 export async function getAllNewsArticles() {
@@ -66,13 +84,15 @@ export async function getAllNewsArticles() {
 
 export async function getPublishedNewsArticles(limit?: number) {
   await connectDb();
-  let query = NewsArticle.find({ isPublished: true }).sort({ publishedAt: -1, createdAt: -1 });
+  let query = NewsArticle.find({ isPublished: true })
+    .select("-blocks")
+    .sort({ publishedAt: -1, createdAt: -1 });
   if (limit) {
     query = query.limit(limit);
   }
 
   const articles = await query.lean();
-  return articles.map((article) => serializeNewsArticle(article as NewsDoc));
+  return articles.map((article) => serializeNewsArticleList(article as NewsDoc));
 }
 
 export async function getNewsArticleById(id: string) {
@@ -105,7 +125,7 @@ export function formatNewsListDate(date: string) {
   return `${year}/${month}/${day}`;
 }
 
-export function getTickerNewsArticles(articles: NewsArticleItem[]) {
+export function getTickerNewsArticles(articles: NewsArticleListItem[]) {
   const highlighted = articles.filter((article) => article.isNew);
   return highlighted.length > 0 ? highlighted : articles.slice(0, 3);
 }
