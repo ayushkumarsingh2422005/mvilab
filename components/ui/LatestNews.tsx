@@ -1,20 +1,34 @@
 import Link from "next/link";
+import { NewsArticleThumbnail } from "@/components/site/NewsArticleThumbnail";
 import { formatNewsListDate, type NewsArticleListItem } from "@/lib/news";
 import { siteContainerClass } from "@/lib/site-container";
 
 function NewsListItem({ article }: { article: NewsArticleListItem }) {
   return (
     <li className="border-b border-[#e4e4e4] last:border-b-0">
-      <div className="grid grid-cols-1 gap-3 py-5 sm:grid-cols-[7.5rem_1fr_auto] sm:items-start sm:gap-6 sm:py-6">
-        <time
-          dateTime={article.publishedAt}
-          className="pt-0.5 text-[0.9rem] tabular-nums tracking-wide text-[#666] sm:text-[0.95rem]"
+      <div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-start sm:py-6">
+        <Link
+          href={`/news/${article.slug}`}
+          className="block shrink-0 sm:w-48"
+          aria-label={`Read ${article.title}`}
         >
-          {formatNewsListDate(article.publishedAt)}
-        </time>
+          <NewsArticleThumbnail
+            thumbnailUrl={article.thumbnailUrl}
+            title={article.title}
+            className="w-full"
+            sizes="(max-width: 640px) 100vw, 192px"
+          />
+        </Link>
 
-        <div className="min-w-0">
-          <p className="m-0 text-[0.95rem] leading-relaxed text-[#333] sm:text-[1rem]">
+        <div className="min-w-0 flex-1">
+          <time
+            dateTime={article.publishedAt}
+            className="block text-[0.9rem] tabular-nums tracking-wide text-[#666] sm:text-[0.95rem]"
+          >
+            {formatNewsListDate(article.publishedAt)}
+          </time>
+
+          <p className="mt-2 mb-0 text-[0.95rem] leading-relaxed text-[#333] sm:text-[1rem]">
             {article.excerpt}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -34,8 +48,6 @@ function NewsListItem({ article }: { article: NewsArticleListItem }) {
             ) : null}
           </div>
         </div>
-
-        <span className="hidden size-9 shrink-0 sm:block" aria-hidden="true" />
       </div>
     </li>
   );

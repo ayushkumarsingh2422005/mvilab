@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { NewsArticleThumbnail } from "@/components/site/NewsArticleThumbnail";
 import { NewsPageRenderer } from "@/components/site/NewsPageRenderer";
 import { formatNewsDate, getPublishedNewsArticleBySlug } from "@/lib/news";
 import { siteContainerClass } from "@/lib/site-container";
@@ -45,6 +46,17 @@ export default async function NewsArticlePage({ params }: PageProps) {
           <h1 className="m-0 text-[2rem] font-bold text-primary-dark">{article.title}</h1>
           <p className="mt-3 mb-0 max-w-3xl text-base leading-relaxed text-[#555]">{article.excerpt}</p>
         </header>
+
+        {article.thumbnailUrl ? (
+          <div className="mb-8 max-w-4xl">
+            <NewsArticleThumbnail
+              thumbnailUrl={article.thumbnailUrl}
+              title={article.title}
+              className="w-full"
+              sizes="(max-width: 896px) 100vw, 896px"
+            />
+          </div>
+        ) : null}
 
         <NewsPageRenderer blocks={article.blocks} />
       </div>

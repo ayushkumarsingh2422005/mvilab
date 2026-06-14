@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NewsArticleThumbnail } from "@/components/site/NewsArticleThumbnail";
 import { formatNewsDate, getPublishedNewsArticles } from "@/lib/news";
 import { siteContainerClass } from "@/lib/site-container";
 
@@ -24,31 +25,46 @@ export default async function NewsPage() {
                 key={article.id}
                 className="rounded-xl border border-[#e8e8e8] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)]"
               >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="text-[0.82rem] font-medium text-[#777]">
-                    {formatNewsDate(article.publishedAt)}
-                  </span>
-                  <span className="rounded-full bg-primary-light px-2.5 py-0.5 text-[0.75rem] font-semibold text-primary-dark">
-                    {article.category}
-                  </span>
-                  {article.isNew ? (
-                    <span className="rounded-full bg-primary px-2.5 py-0.5 text-[0.75rem] font-semibold text-white">
-                      New
-                    </span>
-                  ) : null}
-                </div>
-                <h2 className="m-0 text-[1.15rem] font-semibold text-[#222]">
-                  <Link href={`/news/${article.slug}`} className="text-inherit no-underline hover:text-primary hover:underline">
-                    {article.title}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                  <Link
+                    href={`/news/${article.slug}`}
+                    className="block shrink-0 sm:w-56"
+                    aria-label={`Read ${article.title}`}
+                  >
+                    <NewsArticleThumbnail thumbnailUrl={article.thumbnailUrl} title={article.title} className="w-full" />
                   </Link>
-                </h2>
-                <p className="mt-2 mb-3 text-[0.95rem] leading-relaxed text-[#555]">{article.excerpt}</p>
-                <Link
-                  href={`/news/${article.slug}`}
-                  className="text-sm font-semibold text-primary hover:text-primary-dark hover:underline"
-                >
-                  Read full article →
-                </Link>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <span className="text-[0.82rem] font-medium text-[#777]">
+                        {formatNewsDate(article.publishedAt)}
+                      </span>
+                      <span className="rounded-full bg-primary-light px-2.5 py-0.5 text-[0.75rem] font-semibold text-primary-dark">
+                        {article.category}
+                      </span>
+                      {article.isNew ? (
+                        <span className="rounded-full bg-primary px-2.5 py-0.5 text-[0.75rem] font-semibold text-white">
+                          New
+                        </span>
+                      ) : null}
+                    </div>
+                    <h2 className="m-0 text-[1.15rem] font-semibold text-[#222]">
+                      <Link
+                        href={`/news/${article.slug}`}
+                        className="text-inherit no-underline hover:text-primary hover:underline"
+                      >
+                        {article.title}
+                      </Link>
+                    </h2>
+                    <p className="mt-2 mb-3 text-[0.95rem] leading-relaxed text-[#555]">{article.excerpt}</p>
+                    <Link
+                      href={`/news/${article.slug}`}
+                      className="text-sm font-semibold text-primary hover:text-primary-dark hover:underline"
+                    >
+                      Read full article →
+                    </Link>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
