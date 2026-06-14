@@ -37,6 +37,28 @@ export default function AdminDashboardPage() {
           </Link>
 
           <Link
+            href="/admin/research-papers"
+            className="rounded-2xl border border-[#e0eaed] bg-white p-6 no-underline shadow-sm transition hover:border-primary/25 hover:shadow-md"
+          >
+            <p className="m-0 text-xs font-semibold uppercase tracking-wide text-primary">Publications</p>
+            <h2 className="mt-2 mb-0 text-lg font-bold text-primary-dark">Research papers</h2>
+            <p className="mt-2 mb-0 text-sm leading-relaxed text-[#667]">
+              Manage publications and assign student authors.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/assets"
+            className="rounded-2xl border border-[#e0eaed] bg-white p-6 no-underline shadow-sm transition hover:border-primary/25 hover:shadow-md"
+          >
+            <p className="m-0 text-xs font-semibold uppercase tracking-wide text-primary">Media</p>
+            <h2 className="mt-2 mb-0 text-lg font-bold text-primary-dark">Asset manager</h2>
+            <p className="mt-2 mb-0 text-sm leading-relaxed text-[#667]">
+              Browse uploads, copy paths, and manage custom folders.
+            </p>
+          </Link>
+
+          <Link
             href="/editor"
             className="rounded-2xl border border-[#e0eaed] bg-white p-6 no-underline shadow-sm transition hover:border-primary/25 hover:shadow-md"
           >

@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { HiOutlinePencilSquare, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi2";
+import { HiOutlineFolderOpen, HiOutlinePencilSquare, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi2";
+import { AssetImagePicker } from "@/components/admin/AssetImagePicker";
 import { Modal, ModalActions, ModalAlert } from "@/components/ui/Modal";
 import type { ResearchPaperItem } from "@/lib/research-papers";
+import type { AssetDirectoryListing } from "@/lib/assets/list";
 
 type StudentOption = {
   id: string;
@@ -64,6 +66,11 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [currentThumbnailUrl, setCurrentThumbnailUrl] = useState("");
+  const [selectedAssetPath, setSelectedAssetPath] = useState("");
+  const [assetPickerOpen, setAssetPickerOpen] = useState(false);
+  const [assetPickerListing, setAssetPickerListing] = useState<AssetDirectoryListing | null>(null);
+  const [assetPickerLoading, setAssetPickerLoading] = useState(false);
+  const [assetPickerKey, setAssetPickerKey] = useState(0);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -79,6 +86,7 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
     setThumbnailFile(null);
     setThumbnailPreview("");
     setCurrentThumbnailUrl("");
+    setSelectedAssetPath("");
   }
 
   function openCreate() {
@@ -138,6 +146,19 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
     }
   }
 
+  async function assignThumbnailFromAsset(paperId: string, assetPath: string) {
+    const response = await fetch(`/api/admin/research-papers/${paperId}/thumbnail`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ assetPath }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error ?? "Unable to use selected asset.");
+    }
+  }
+
   function handleThumbnailChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -147,8 +168,48 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
     }
 
     setThumbnailFile(file);
+    setSelectedAssetPath("");
     setThumbnailPreview(URL.createObjectURL(file));
     event.target.value = "";
+  }
+
+  function handleAssetSelect(publicPath: string) {
+    if (thumbnailPreview.startsWith("blob:")) {
+      URL.revokeObjectURL(thumbnailPreview);
+    }
+
+    setThumbnailFile(null);
+    setSelectedAssetPath(publicPath);
+    setThumbnailPreview("");
+  }
+
+  async function openAssetPicker() {
+    setAssetPickerLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/admin/assets");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error ?? "Unable to open asset library.");
+        return;
+      }
+
+      setAssetPickerListing(data.listing);
+      setAssetPickerKey((current) => current + 1);
+      setAssetPickerOpen(true);
+    } catch {
+      setError("Unable to open asset library right now.");
+    } finally {
+      setAssetPickerLoading(false);
+    }
+  }
+
+  function thumbnailDisplayUrl() {
+    if (thumbnailPreview) return thumbnailPreview;
+    if (selectedAssetPath) return selectedAssetPath;
+    return currentThumbnailUrl;
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -187,6 +248,14 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
           await uploadThumbnail(paperId, thumbnailFile);
         } catch (uploadError) {
           setError(uploadError instanceof Error ? uploadError.message : "Paper saved, but thumbnail upload failed.");
+          await refreshPapers();
+          return;
+        }
+      } else if (selectedAssetPath) {
+        try {
+          await assignThumbnailFromAsset(paperId, selectedAssetPath);
+        } catch (assetError) {
+          setError(assetError instanceof Error ? assetError.message : "Paper saved, but thumbnail selection failed.");
           await refreshPapers();
           return;
         }
@@ -375,11 +444,11 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
 
             <div className="block sm:col-span-2">
               <span className="mb-1.5 block text-sm font-medium text-[#444]">Thumbnail image</span>
-              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-start">
                 <div className="relative aspect-video w-full max-w-xs overflow-hidden rounded-xl border border-[#ececec] bg-[#f7fbfc]">
-                  {thumbnailPreview || currentThumbnailUrl ? (
+                  {thumbnailDisplayUrl() ? (
                     <Image
-                      src={thumbnailPreview || currentThumbnailUrl}
+                      src={thumbnailDisplayUrl()}
                       alt=""
                       fill
                       className="object-cover"
@@ -392,7 +461,7 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
                     </span>
                   )}
                 </div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <input
                     ref={thumbnailInputRef}
                     type="file"
@@ -400,14 +469,31 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
                     className="hidden"
                     onChange={handleThumbnailChange}
                   />
-                  <button
-                    type="button"
-                    onClick={() => thumbnailInputRef.current?.click()}
-                    className="rounded-xl border border-primary/25 px-4 py-2 text-sm font-semibold text-primary-dark transition hover:bg-primary-light"
-                  >
-                    {thumbnailPreview || currentThumbnailUrl ? "Change thumbnail" : "Upload thumbnail"}
-                  </button>
-                  <p className="mt-2 mb-0 text-xs text-[#667]">JPG, PNG, or WebP. Max 3 MB. Displayed at 16:9.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => thumbnailInputRef.current?.click()}
+                      className="rounded-xl border border-primary/25 px-4 py-2 text-sm font-semibold text-primary-dark transition hover:bg-primary-light"
+                    >
+                      Upload new image
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void openAssetPicker()}
+                      disabled={assetPickerLoading}
+                      className="inline-flex items-center gap-2 rounded-xl border border-primary/25 px-4 py-2 text-sm font-semibold text-primary-dark transition hover:bg-primary-light disabled:opacity-60"
+                    >
+                      <HiOutlineFolderOpen size={16} aria-hidden />
+                      Choose from assets
+                    </button>
+                  </div>
+                  <p className="mt-2 mb-0 text-xs text-[#667]">
+                    Upload a new JPG, PNG, or WebP (max 3 MB), or pick an existing image from the asset library.
+                    Displayed at 16:9.
+                  </p>
+                  {selectedAssetPath ? (
+                    <p className="mt-2 mb-0 font-mono text-xs text-primary-dark">{selectedAssetPath}</p>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -445,6 +531,14 @@ export function ResearchPaperManager({ initialPapers, initialStudents }: Researc
           />
         </form>
       </Modal>
+
+      <AssetImagePicker
+        key={assetPickerKey}
+        open={assetPickerOpen}
+        initialListing={assetPickerListing}
+        onClose={() => setAssetPickerOpen(false)}
+        onSelect={handleAssetSelect}
+      />
     </>
   );
 }

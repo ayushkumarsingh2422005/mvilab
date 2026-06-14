@@ -41,10 +41,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# uploaded student avatars (local dev)
+# uploaded assets (local dev)
+/public/uploads/**/*
+!/public/uploads/**/.gitkeep
+
+# legacy explicit rules kept for clarity
 /public/uploads/avatars/*
 !/public/uploads/avatars/.gitkeep
 
-# uploaded research thumbnails (local dev)
 /public/uploads/research/*
 !/public/uploads/research/.gitkeep
+
+/public/uploads/news/*
+!/public/uploads/news/.gitkeep
