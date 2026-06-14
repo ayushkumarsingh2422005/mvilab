@@ -370,7 +370,7 @@ export function AssetManager({ initialListing }: AssetManagerProps) {
             paths, but do not upload or delete in that folder.
           </li>
           <li>
-            Use <strong>research</strong> and <strong>news</strong> for paper thumbnails and notice images. Upload
+            Use <strong>research</strong> and <strong>news</strong> for paper thumbnails and news images. Upload
             files there, then copy the public path into your content.
           </li>
           <li>Create more custom folders (for example <code className="rounded bg-white px-1.5 py-0.5 text-xs">site/hero</code>) and upload images or documents to use in pages and content.</li>

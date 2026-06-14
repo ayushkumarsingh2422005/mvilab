@@ -47,8 +47,8 @@ export default async function StudentPortalPage() {
                 </Link>
               </li>
               <li>
-                <Link href="/notices" className="font-medium text-primary hover:text-primary-dark hover:underline">
-                  View lab notices
+                <Link href="/news" className="font-medium text-primary hover:text-primary-dark hover:underline">
+                  View lab news
                 </Link>
               </li>
               <li>

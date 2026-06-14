@@ -1,6 +1,5 @@
 import { Schema, model, models, type InferSchemaType, type Types } from "mongoose";
-
-export const NEWS_CATEGORIES = ["General", "Research", "Events", "Admissions"] as const;
+import { NEWS_CATEGORIES } from "@/lib/news-categories";
 
 const newsArticleSchema = new Schema(
   {
@@ -18,7 +17,6 @@ const newsArticleSchema = new Schema(
   { timestamps: true },
 );
 
-newsArticleSchema.index({ slug: 1 }, { unique: true });
 newsArticleSchema.index({ isPublished: 1, publishedAt: -1 });
 newsArticleSchema.index({ createdAt: -1 });
 

@@ -54,3 +54,4 @@ next-env.d.ts
 
 /public/uploads/news/*
 !/public/uploads/news/.gitkeep
+!/public/uploads/news/**/.gitkeep

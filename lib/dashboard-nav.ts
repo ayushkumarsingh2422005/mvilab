@@ -36,6 +36,11 @@ export const adminNavItems: DashboardNavItem[] = [
     icon: "assets",
   },
   {
+    href: "/admin/news",
+    label: "News",
+    icon: "notices",
+  },
+  {
     href: "/editor",
     label: "Page editor",
     icon: "editor",
@@ -66,8 +71,8 @@ export const studentNavItems: DashboardNavItem[] = [
     icon: "papers",
   },
   {
-    href: "/notices",
-    label: "Lab notices",
+    href: "/news",
+    label: "Lab news",
     icon: "notices",
   },
   {

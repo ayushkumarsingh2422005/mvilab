@@ -1,41 +1,33 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-import { formatNoticeListDate, notices, type Notice } from "@/lib/notices";
+import { formatNewsListDate, type NewsArticleItem } from "@/lib/news";
 import { siteContainerClass } from "@/lib/site-container";
 
-function NewsListItem({ notice }: { notice: Notice }) {
-  const [open, setOpen] = useState(false);
-
+function NewsListItem({ article }: { article: NewsArticleItem }) {
   return (
     <li className="border-b border-[#e4e4e4] last:border-b-0">
       <div className="grid grid-cols-1 gap-3 py-5 sm:grid-cols-[7.5rem_1fr_auto] sm:items-start sm:gap-6 sm:py-6">
         <time
-          dateTime={notice.date}
+          dateTime={article.publishedAt}
           className="pt-0.5 text-[0.9rem] tabular-nums tracking-wide text-[#666] sm:text-[0.95rem]"
         >
-          {formatNoticeListDate(notice.date)}
+          {formatNewsListDate(article.publishedAt)}
         </time>
 
         <div className="min-w-0">
           <p className="m-0 text-[0.95rem] leading-relaxed text-[#333] sm:text-[1rem]">
-            {notice.excerpt}
+            {article.excerpt}
           </p>
-          {open ? (
-            <p className="mt-3 mb-0 text-[0.9rem] leading-relaxed text-[#555]">{notice.body}</p>
-          ) : null}
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
             <Link
-              href={`/notices#${notice.id}`}
+              href={`/news/${article.slug}`}
               className="inline-flex text-[0.85rem] font-medium text-primary hover:text-primary-dark hover:underline"
             >
-              Read full notice
+              Read full article
             </Link>
             <span className="inline-flex w-fit border border-primary/35 px-2.5 py-0.5 text-[0.72rem] font-semibold uppercase tracking-wide text-primary-dark">
-              {notice.category}
+              {article.category}
             </span>
-            {notice.isNew ? (
+            {article.isNew ? (
               <span className="inline-flex w-fit border border-primary bg-primary px-2.5 py-0.5 text-[0.72rem] font-semibold uppercase tracking-wide text-white">
                 New
               </span>
@@ -43,21 +35,17 @@ function NewsListItem({ notice }: { notice: Notice }) {
           </div>
         </div>
 
-        <button
-          type="button"
-          className="flex size-9 shrink-0 cursor-pointer items-center justify-center self-start border border-primary/25 bg-white text-[1.35rem] leading-none text-primary transition-colors hover:border-primary hover:bg-primary-light sm:mt-0.5"
-          aria-expanded={open}
-          aria-label={open ? "Collapse notice" : "Expand notice"}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? "−" : "+"}
-        </button>
+        <span className="hidden size-9 shrink-0 sm:block" aria-hidden="true" />
       </div>
     </li>
   );
 }
 
-export function LatestNews() {
+type LatestNewsProps = {
+  articles: NewsArticleItem[];
+};
+
+export function LatestNews({ articles }: LatestNewsProps) {
   return (
     <section className="bg-[#f9f9f9] py-10 sm:py-14" aria-labelledby="latest-news-heading">
       <div className={siteContainerClass}>
@@ -77,17 +65,17 @@ export function LatestNews() {
         </div>
 
         <ul className="m-0 mx-auto max-w-4xl list-none p-0">
-          {notices.map((notice) => (
-            <NewsListItem key={notice.id} notice={notice} />
+          {articles.map((article) => (
+            <NewsListItem key={article.id} article={article} />
           ))}
         </ul>
 
         <div className="mx-auto mt-8 flex max-w-4xl justify-center sm:mt-10">
           <Link
-            href="/notices"
+            href="/news"
             className="inline-flex items-center gap-1.5 text-[0.92rem] font-semibold text-primary transition-colors hover:text-primary-dark hover:underline"
           >
-            View all notices
+            View all news
             <span aria-hidden="true">→</span>
           </Link>
         </div>

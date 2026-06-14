@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { RiMegaphoneLine } from "react-icons/ri";
-import { getTickerNotices, type Notice } from "@/lib/notices";
+import { getTickerNewsArticles, type NewsArticleItem } from "@/lib/news";
 
 type NewsTickerProps = {
-  notices?: Notice[];
+  articles: NewsArticleItem[];
 };
 
-export function NewsTicker({ notices }: NewsTickerProps) {
-  const items = getTickerNotices(notices);
+export function NewsTicker({ articles }: NewsTickerProps) {
+  const items = getTickerNewsArticles(articles);
   const tickerText =
     items.length > 0
-      ? items.map((notice) => notice.excerpt).join("   •   ")
-      : "Latest lab notices and updates will be published here shortly.";
+      ? items.map((article) => article.excerpt).join("   •   ")
+      : "Latest lab news and updates will be published here shortly.";
   const scrollText = `${tickerText}   •   ${tickerText}`;
 
   return (
@@ -23,10 +23,10 @@ export function NewsTicker({ notices }: NewsTickerProps) {
       <div className="ticker-track">
         <div className="ticker-scroll" aria-live="polite">
           <p className="ticker-content">
-            <Link href="/notices">{scrollText}</Link>
+            <Link href="/news">{scrollText}</Link>
           </p>
           <p className="ticker-content" aria-hidden="true">
-            <Link href="/notices" tabIndex={-1}>
+            <Link href="/news" tabIndex={-1}>
               {scrollText}
             </Link>
           </p>
