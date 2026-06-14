@@ -9,9 +9,10 @@ type ModalProps = {
   description?: string;
   onClose: () => void;
   children: React.ReactNode;
+  panelClassName?: string;
 };
 
-export function Modal({ open, title, description, onClose, children }: ModalProps) {
+export function Modal({ open, title, description, onClose, children, panelClassName }: ModalProps) {
   useEffect(() => {
     if (!open) return;
 
@@ -42,7 +43,7 @@ export function Modal({ open, title, description, onClose, children }: ModalProp
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="relative z-[1] w-full max-w-lg rounded-2xl border border-[#e0eaed] bg-white shadow-[0_20px_50px_rgba(13,124,140,0.18)]"
+        className={`relative z-[1] w-full rounded-2xl border border-[#e0eaed] bg-white shadow-[0_20px_50px_rgba(13,124,140,0.18)] ${panelClassName ?? "max-w-lg"}`}
       >
         <div className="flex items-start justify-between gap-4 border-b border-[#ececec] px-6 py-5">
           <div>

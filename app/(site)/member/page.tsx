@@ -1,14 +1,12 @@
-import { SectionPage } from "@/components/ui/SectionPage";
+import { MemberDirectory } from "@/components/site/MemberDirectory";
+import { listPublicStudents } from "@/lib/public-students";
 
 export const metadata = {
   title: "Member — MVI Lab",
+  description: "Meet the students and researchers at MVI Lab.",
 };
 
-export default function MemberPage() {
-  return (
-    <SectionPage
-      title="Member"
-      description="Meet the faculty, researchers, and students who contribute to MVI Lab."
-    />
-  );
+export default async function MemberPage() {
+  const students = await listPublicStudents();
+  return <MemberDirectory students={students} />;
 }

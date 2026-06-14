@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { formatNoticeDate, notices } from "@/lib/notices";
 import { siteContainerClass } from "@/lib/site-container";
 
@@ -11,13 +10,7 @@ export default function NoticesPage() {
   return (
     <main id="main-content" className="min-h-[60vh] py-10">
       <div className={siteContainerClass}>
-        <Link href="/" className="text-[0.9rem] font-medium text-primary hover:text-primary-dark hover:underline">
-          ← Back to home
-        </Link>
-        <h1 className="mt-4 mb-2 text-[2rem] text-primary">Notices & Updates</h1>
-        <p className="mb-8 text-[1rem] leading-relaxed text-[#555]">
-          Recent announcements from the Machine Vision and Intelligence Lab.
-        </p>
+        <h1 className="mb-8 text-[2rem] text-primary">Notices & Updates</h1>
 
         <ul className="m-0 flex list-none flex-col gap-4 p-0">
           {notices.map((notice) => (

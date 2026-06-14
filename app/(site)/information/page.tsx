@@ -6,9 +6,6 @@ export const metadata = {
 
 export default function InformationPage() {
   return (
-    <SectionPage
-      title="Information"
-      description="Contact details, location, and general information about MVI Lab."
-    />
+    <SectionPage title="Information" />
   );
 }

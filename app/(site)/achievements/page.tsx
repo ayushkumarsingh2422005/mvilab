@@ -6,9 +6,6 @@ export const metadata = {
 
 export default function AchievementsPage() {
   return (
-    <SectionPage
-      title="Achievements"
-      description="Publications, awards, projects, and milestones from the Machine Vision and Intelligence Lab."
-    />
+    <SectionPage title="Achievements" />
   );
 }

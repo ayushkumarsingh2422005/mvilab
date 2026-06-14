@@ -37,6 +37,16 @@ export default async function StudentPortalPage() {
             <h2 className="m-0 text-lg font-bold text-primary-dark">Quick access</h2>
             <ul className="mt-4 space-y-3 text-sm">
               <li>
+                <Link href="/portal/papers" className="font-medium text-primary hover:text-primary-dark hover:underline">
+                  View your research papers
+                </Link>
+              </li>
+              <li>
+                <Link href="/portal/profile" className="font-medium text-primary hover:text-primary-dark hover:underline">
+                  Edit your profile
+                </Link>
+              </li>
+              <li>
                 <Link href="/notices" className="font-medium text-primary hover:text-primary-dark hover:underline">
                   View lab notices
                 </Link>

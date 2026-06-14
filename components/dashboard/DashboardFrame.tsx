@@ -19,7 +19,7 @@ export function DashboardFrame({
   children,
 }: DashboardFrameProps) {
   return (
-    <div className="flex min-h-dvh flex-col bg-[#f3f7f8] lg:flex-row">
+    <div className="flex h-dvh flex-col overflow-hidden bg-[#f3f7f8] lg:flex-row">
       <DashboardSidebar
         portalLabel={portalLabel}
         userName={userName}
@@ -27,7 +27,7 @@ export function DashboardFrame({
         navItems={navItems}
         logoutRedirect={logoutRedirect}
       />
-      <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">{children}</div>
     </div>
   );
 }

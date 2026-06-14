@@ -40,3 +40,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uploaded student avatars (local dev)
+/public/uploads/avatars/*
+!/public/uploads/avatars/.gitkeep
+
+# uploaded research thumbnails (local dev)
+/public/uploads/research/*
+!/public/uploads/research/.gitkeep

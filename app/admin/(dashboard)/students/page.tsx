@@ -11,7 +11,7 @@ export default async function AdminStudentsPage() {
   await connectDb();
   const students = await User.find({ role: "student" })
     .sort({ createdAt: -1 })
-    .select("name email studentId isActive mustResetPassword createdAt")
+    .select("name email studentId slug isActive mustResetPassword createdAt")
     .lean();
 
   const initialStudents = students.map((student) => ({
@@ -19,6 +19,7 @@ export default async function AdminStudentsPage() {
     name: student.name ?? undefined,
     email: student.email,
     studentId: student.studentId ?? undefined,
+    slug: student.slug ?? undefined,
     isActive: student.isActive,
     mustResetPassword: student.mustResetPassword,
     createdAt: student.createdAt.toISOString(),
@@ -28,7 +29,7 @@ export default async function AdminStudentsPage() {
     <>
       <DashboardPageHeader
         title="Students"
-        description="Create student accounts and manage portal access."
+        description="Create student accounts with a public profile slug and manage portal access."
       />
       <DashboardWorkspace>
         <StudentManager initialStudents={initialStudents} />

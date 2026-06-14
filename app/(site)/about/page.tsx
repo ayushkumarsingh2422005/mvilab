@@ -6,9 +6,6 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <SectionPage
-      title="About"
-      description="Learn about the mission, vision, and research focus of MVI Lab at NIT Jamshedpur."
-    />
+    <SectionPage title="About" />
   );
 }

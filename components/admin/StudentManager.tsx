@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import { HiOutlinePlus } from "react-icons/hi2";
+import { HiOutlineEye, HiOutlinePlus } from "react-icons/hi2";
 import { UserActiveToggle } from "@/components/admin/UserActiveToggle";
+import { StudentSlugEditor } from "@/components/admin/StudentSlugEditor";
 import { Modal, ModalActions, ModalAlert, ModalField } from "@/components/ui/Modal";
 
 type StudentRow = {
@@ -10,6 +12,7 @@ type StudentRow = {
   name?: string;
   email: string;
   studentId?: string;
+  slug?: string;
   isActive: boolean;
   mustResetPassword: boolean;
   createdAt: string;
@@ -24,6 +27,7 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [slug, setSlug] = useState("");
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,6 +37,11 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
       current.map((student) => (student.id === id ? { ...student, isActive } : student)),
     );
     setToast(isActive ? "Student account activated." : "Student account deactivated.");
+  }
+
+  function updateStudentSlug(id: string, slug: string) {
+    setStudents((current) => current.map((student) => (student.id === id ? { ...student, slug } : student)));
+    setToast("Public profile slug updated.");
   }
 
   async function refreshStudents() {
@@ -45,6 +54,7 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
           name: student.name,
           email: student.email,
           studentId: student.studentId,
+          slug: student.slug,
           isActive: student.isActive,
           mustResetPassword: student.mustResetPassword,
           createdAt: student.createdAt,
@@ -58,6 +68,7 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
     setError("");
     setName("");
     setEmail("");
+    setSlug("");
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -69,7 +80,7 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
       const response = await fetch("/api/admin/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({ name, email, slug }),
       });
 
       const data = await response.json();
@@ -123,8 +134,10 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
                 <tr className="border-b border-[#ececec] text-[#666]">
                   <th className="py-2 pr-4 font-medium">Student ID</th>
                   <th className="py-2 pr-4 font-medium">Name</th>
+                  <th className="py-2 pr-4 font-medium">Public slug</th>
                   <th className="py-2 pr-4 font-medium">Email</th>
-                  <th className="py-2 font-medium">Status</th>
+                  <th className="py-2 pr-4 font-medium">Status</th>
+                  <th className="py-2 font-medium">Profile</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,8 +145,17 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
                   <tr key={student.id} className="border-b border-[#f0f0f0] last:border-b-0">
                     <td className="py-3 pr-4 font-semibold text-primary-dark">{student.studentId}</td>
                     <td className="py-3 pr-4">{student.name ?? "—"}</td>
+                    <td className="py-3 pr-4">
+                      <StudentSlugEditor
+                        studentId={student.id}
+                        studentName={student.name}
+                        slug={student.slug}
+                        onUpdated={(slug) => updateStudentSlug(student.id, slug)}
+                        onError={setToast}
+                      />
+                    </td>
                     <td className="py-3 pr-4">{student.email}</td>
-                    <td className="py-3">
+                    <td className="py-3 pr-4">
                       <UserActiveToggle
                         userId={student.id}
                         isActive={student.isActive}
@@ -141,6 +163,15 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
                         onChanged={(isActive) => updateStudentStatus(student.id, isActive)}
                         onError={setToast}
                       />
+                    </td>
+                    <td className="py-3">
+                      <Link
+                        href={`/admin/students/${student.id}`}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark hover:underline"
+                      >
+                        <HiOutlineEye size={16} aria-hidden />
+                        View
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -154,7 +185,7 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
         open={open}
         onClose={closeModal}
         title="Create student"
-        description="A welcome email with the student ID and password setup link will be sent via Brevo."
+        description="Set a unique public profile slug. A welcome email with the student ID and password setup link will be sent via Brevo."
       >
         <form onSubmit={handleSubmit}>
           {error ? <ModalAlert message={error} tone="error" /> : null}
@@ -162,6 +193,21 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <ModalField label="Full name" value={name} onChange={setName} />
             <ModalField label="Email" type="email" value={email} onChange={setEmail} />
+            <label className="block sm:col-span-2">
+              <span className="mb-1.5 block text-sm font-medium text-[#444]">Public profile slug</span>
+              <input
+                type="text"
+                required
+                value={slug}
+                onChange={(event) => setSlug(event.target.value.toLowerCase())}
+                placeholder="e.g. jane-doe"
+                pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+                className="w-full rounded-lg border border-[#d8d8d8] px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+              />
+              <span className="mt-1.5 block text-xs text-[#667]">
+                Profile URL: /student/{slug || "your-slug"} — lowercase letters, numbers, and hyphens only.
+              </span>
+            </label>
           </div>
 
           <ModalActions

@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 import type { IconType } from "react-icons";
 import {
   HiOutlineArrowTopRightOnSquare,
+  HiOutlineDocumentText,
   HiOutlineHome,
   HiOutlinePencilSquare,
   HiOutlineShieldCheck,
+  HiOutlineUserCircle,
   HiOutlineUsers,
 } from "react-icons/hi2";
 import { RiMegaphoneLine } from "react-icons/ri";
@@ -23,6 +25,8 @@ const dashboardIcons: Record<DashboardIconKey, IconType> = {
   editor: HiOutlinePencilSquare,
   external: HiOutlineArrowTopRightOnSquare,
   notices: RiMegaphoneLine,
+  profile: HiOutlineUserCircle,
+  papers: HiOutlineDocumentText,
 };
 
 type DashboardSidebarProps = {
@@ -49,7 +53,7 @@ export function DashboardSidebar({
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-full shrink-0 flex-col border-b border-[#dce8eb] bg-white lg:h-dvh lg:w-[260px] lg:border-b-0 lg:border-r">
+    <aside className="flex h-auto w-full shrink-0 flex-col border-b border-[#dce8eb] bg-white lg:h-full lg:w-[260px] lg:border-b-0 lg:border-r">
       <div className="border-b border-[#e8eef0] px-5 py-5">
         <Link href="/" className="flex items-center gap-3 no-underline">
           <Image src="/MVI-logo.png" alt="" width={40} height={40} className="rounded-full" />
@@ -62,7 +66,7 @@ export function DashboardSidebar({
         </Link>
       </div>
 
-      <nav className="flex-1 overflow-x-auto overflow-y-auto px-3 py-4 lg:overflow-x-hidden" aria-label="Dashboard navigation">
+      <nav className="min-h-0 flex-1 overflow-x-auto overflow-y-auto px-3 py-4 lg:overflow-x-hidden" aria-label="Dashboard navigation">
         <ul className="m-0 flex list-none gap-2 p-0 lg:block lg:space-y-1">
           {navItems.map((item) => {
             const active = isActive(pathname, item);
@@ -93,7 +97,7 @@ export function DashboardSidebar({
         </ul>
       </nav>
 
-      <div className="border-t border-[#e8eef0] px-4 py-4">
+      <div className="shrink-0 border-t border-[#e8eef0] px-4 py-4">
         <div className="mb-3 rounded-xl bg-[#f7fbfc] px-3 py-3">
           <p className="m-0 truncate text-sm font-semibold text-primary-dark">{userName ?? "User"}</p>
           {userMeta ? <p className="mt-0.5 mb-0 truncate text-xs text-[#667]">{userMeta}</p> : null}

@@ -16,7 +16,7 @@ export async function GET() {
   await connectDb();
   const students = await User.find({ role: "student" })
     .sort({ createdAt: -1 })
-    .select("name email studentId isActive mustResetPassword createdAt")
+    .select("name email studentId slug isActive mustResetPassword createdAt")
     .lean();
 
   return NextResponse.json({
@@ -25,6 +25,7 @@ export async function GET() {
       name: student.name,
       email: student.email,
       studentId: student.studentId,
+      slug: student.slug,
       isActive: student.isActive,
       mustResetPassword: student.mustResetPassword,
       createdAt: student.createdAt,
@@ -47,12 +48,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email } = parsed.data;
+    const { name, email, slug } = parsed.data;
     await connectDb();
 
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
       return NextResponse.json({ error: "A user with this email already exists." }, { status: 409 });
+    }
+
+    const slugTaken = await User.findOne({ slug });
+    if (slugTaken) {
+      return NextResponse.json({ error: "This profile slug is already in use." }, { status: 409 });
     }
 
     const studentId = await generateStudentId();
@@ -62,6 +68,7 @@ export async function POST(request: Request) {
     const student = await User.create({
       email: email.toLowerCase(),
       name,
+      slug,
       role: "student",
       studentId,
       passwordHash,
@@ -87,6 +94,7 @@ export async function POST(request: Request) {
         name: student.name,
         email: student.email,
         studentId: student.studentId,
+        slug: student.slug,
       },
     });
   } catch (error) {

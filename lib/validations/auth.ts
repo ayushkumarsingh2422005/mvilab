@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { studentSlugSchema } from "@/lib/validations/student-slug";
 
 export const loginSchema = z.object({
   email: z.email("Enter a valid email address."),
@@ -23,6 +24,7 @@ export const resetPasswordSchema = z.object({
 export const createStudentSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters."),
   email: z.email("Enter a valid email address."),
+  slug: studentSlugSchema,
 });
 
 export const createAdminSchema = z.object({
