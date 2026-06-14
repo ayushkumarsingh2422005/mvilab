@@ -3,6 +3,7 @@
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
 import { ChaiBuilderEditor } from "@chaibuilder/sdk";
 import { loadWebBlocks } from "@chaibuilder/sdk/web-blocks";
+import "@/lib/chaibuilder/setup";
 import "@chaibuilder/sdk/styles";
 import Link from "next/link";
 import { useEffect, useState } from "react";
