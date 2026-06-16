@@ -1,6 +1,15 @@
 import path from "path";
 
-export const UPLOADS_ROOT = path.join(process.cwd(), "public", "uploads");
+function resolveUploadsRoot() {
+  const custom = process.env.UPLOADS_DIR?.trim();
+  if (custom) {
+    return path.isAbsolute(custom) ? custom : path.join(process.cwd(), custom);
+  }
+
+  return path.join(process.cwd(), "public", "uploads");
+}
+
+export const UPLOADS_ROOT = resolveUploadsRoot();
 export const UPLOADS_PUBLIC_PREFIX = "/uploads";
 
 /** Student avatars — browse and copy paths only; uploads happen in the portal. */

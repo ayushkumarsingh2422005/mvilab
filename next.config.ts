@@ -46,6 +46,14 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: uploadRemotePatterns,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/uploads/:path*",
+        destination: "/api/uploads/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

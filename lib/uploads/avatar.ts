@@ -1,7 +1,8 @@
 import { mkdir, unlink, writeFile } from "fs/promises";
 import path from "path";
+import { UPLOADS_ROOT } from "@/lib/assets/constants";
 
-const AVATAR_DIR = path.join(process.cwd(), "public", "uploads", "avatars");
+const AVATAR_DIR = path.join(UPLOADS_ROOT, "avatars");
 const MAX_BYTES = 2 * 1024 * 1024;
 
 const ALLOWED_TYPES = new Map([
