@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { HiOutlineEye, HiOutlinePlus } from "react-icons/hi2";
+import { HiOutlineEye, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi2";
 import { UserActiveToggle } from "@/components/admin/UserActiveToggle";
 import { StudentSlugEditor } from "@/components/admin/StudentSlugEditor";
 import { Modal, ModalActions, ModalAlert, ModalField } from "@/components/ui/Modal";
@@ -99,6 +99,24 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
     }
   }
 
+  async function handleDelete(student: StudentRow) {
+    const label = student.name ?? student.studentId ?? student.email;
+    const confirmed = window.confirm(
+      `Permanently delete ${label}?\n\nThis removes their account, profile photo, and research paper links. This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    const response = await fetch(`/api/admin/users/${student.id}`, { method: "DELETE" });
+    const data = await response.json();
+    if (!response.ok) {
+      setToast(data.error ?? "Unable to delete student.");
+      return;
+    }
+
+    setToast("Student deleted.");
+    await refreshStudents();
+  }
+
   return (
     <>
       <section className="rounded-2xl border border-[#e0eaed] bg-white shadow-sm">
@@ -137,7 +155,7 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
                   <th className="py-2 pr-4 font-medium">Public slug</th>
                   <th className="py-2 pr-4 font-medium">Email</th>
                   <th className="py-2 pr-4 font-medium">Status</th>
-                  <th className="py-2 font-medium">Profile</th>
+                  <th className="py-2 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -165,13 +183,23 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
                       />
                     </td>
                     <td className="py-3">
-                      <Link
-                        href={`/admin/students/${student.id}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark hover:underline"
-                      >
-                        <HiOutlineEye size={16} aria-hidden />
-                        View
-                      </Link>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Link
+                          href={`/admin/students/${student.id}`}
+                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark hover:underline"
+                        >
+                          <HiOutlineEye size={16} aria-hidden />
+                          View
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => void handleDelete(student)}
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-red-700 hover:underline"
+                        >
+                          <HiOutlineTrash size={16} aria-hidden />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

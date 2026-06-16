@@ -31,12 +31,19 @@ type NewsDoc = {
   category: NewsCategory;
   publishedAt?: Date | string | null;
   isPublished: boolean;
-  isNew: boolean;
+  highlightAsNew?: boolean;
+  isNew?: boolean;
   thumbnailUrl?: string | null;
   blocks?: ChaiBlock[] | null;
   createdAt?: Date | string | null;
   updatedAt?: Date | string | null;
 };
+
+function readHighlightAsNew(article: NewsDoc) {
+  if (typeof article.highlightAsNew === "boolean") return article.highlightAsNew;
+  if (typeof article.isNew === "boolean") return article.isNew;
+  return false;
+}
 
 function toIsoString(value: Date | string | undefined | null) {
   if (!value) return new Date().toISOString();
@@ -53,7 +60,7 @@ export function serializeNewsArticleList(article: NewsDoc): NewsArticleListItem 
     category: article.category,
     publishedAt: toIsoString(article.publishedAt),
     isPublished: article.isPublished,
-    isNew: article.isNew,
+    isNew: readHighlightAsNew(article),
     thumbnailUrl: article.thumbnailUrl ?? undefined,
     createdAt: toIsoString(article.createdAt),
     updatedAt: toIsoString(article.updatedAt ?? article.createdAt),

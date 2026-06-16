@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db/mongoose";
 import { User } from "@/lib/models/User";
 import { requireSession } from "@/lib/auth/api";
+import { deleteManagedUser } from "@/lib/users/delete-user";
 import { setUserActiveSchema } from "@/lib/validations/auth";
 
 type RouteContext = {
@@ -62,5 +63,25 @@ export async function PATCH(request: Request, context: RouteContext) {
   } catch (error) {
     console.error("Update user status failed:", error);
     return NextResponse.json({ error: "Unable to update user status right now." }, { status: 500 });
+  }
+}
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  const auth = await requireSession("admin");
+  if (auth.error) return auth.error;
+
+  try {
+    const { id } = await context.params;
+    const result = await deleteManagedUser(id, auth.session.sub);
+
+    if ("error" in result) {
+      const status = result.error.includes("not found") ? 404 : 400;
+      return NextResponse.json({ error: result.error }, { status });
+    }
+
+    return NextResponse.json({ ok: true, ...result });
+  } catch (error) {
+    console.error("Delete user failed:", error);
+    return NextResponse.json({ error: "Unable to delete user right now." }, { status: 500 });
   }
 }

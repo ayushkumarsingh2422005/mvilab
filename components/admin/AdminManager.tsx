@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiOutlinePlus } from "react-icons/hi2";
+import { HiOutlinePlus, HiOutlineTrash } from "react-icons/hi2";
 import { UserActiveToggle } from "@/components/admin/UserActiveToggle";
 import { Modal, ModalActions, ModalAlert, ModalField } from "@/components/ui/Modal";
 
@@ -78,6 +78,29 @@ export function AdminManager({ initialAdmins }: AdminManagerProps) {
     }
   }
 
+  async function handleDelete(admin: AdminRow) {
+    if (admin.isCurrentUser) {
+      setToast("You cannot delete your own account.");
+      return;
+    }
+
+    const label = admin.name ?? admin.email;
+    const confirmed = window.confirm(
+      `Permanently delete admin ${label}?\n\nThey will lose portal access immediately. This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    const response = await fetch(`/api/admin/users/${admin.id}`, { method: "DELETE" });
+    const data = await response.json();
+    if (!response.ok) {
+      setToast(data.error ?? "Unable to delete admin.");
+      return;
+    }
+
+    setToast("Administrator deleted.");
+    await refreshAdmins();
+  }
+
   return (
     <>
       <section className="rounded-2xl border border-[#e0eaed] bg-white shadow-sm">
@@ -113,7 +136,8 @@ export function AdminManager({ initialAdmins }: AdminManagerProps) {
                 <tr className="border-b border-[#ececec] text-[#666]">
                   <th className="py-2 pr-4 font-medium">Name</th>
                   <th className="py-2 pr-4 font-medium">Email</th>
-                  <th className="py-2 font-medium">Status</th>
+                  <th className="py-2 pr-4 font-medium">Status</th>
+                  <th className="py-2 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,7 +152,7 @@ export function AdminManager({ initialAdmins }: AdminManagerProps) {
                       ) : null}
                     </td>
                     <td className="py-3 pr-4">{admin.email}</td>
-                    <td className="py-3">
+                    <td className="py-3 pr-4">
                       <UserActiveToggle
                         userId={admin.id}
                         isActive={admin.isActive}
@@ -137,6 +161,20 @@ export function AdminManager({ initialAdmins }: AdminManagerProps) {
                         onChanged={(isActive) => updateAdminStatus(admin.id, isActive)}
                         onError={setToast}
                       />
+                    </td>
+                    <td className="py-3">
+                      {!admin.isCurrentUser ? (
+                        <button
+                          type="button"
+                          onClick={() => void handleDelete(admin)}
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-red-700 hover:underline"
+                        >
+                          <HiOutlineTrash size={16} aria-hidden />
+                          Delete
+                        </button>
+                      ) : (
+                        <span className="text-xs text-[#999]">—</span>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -9,7 +9,7 @@ const newsArticleSchema = new Schema(
     category: { type: String, enum: NEWS_CATEGORIES, default: "General" },
     publishedAt: { type: Date, default: Date.now },
     isPublished: { type: Boolean, default: false },
-    isNew: { type: Boolean, default: false },
+    highlightAsNew: { type: Boolean, default: false },
     thumbnailUrl: { type: String, trim: true },
     blocks: { type: Schema.Types.Mixed, default: [] },
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },

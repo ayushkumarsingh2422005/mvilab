@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     }
 
     const normalized = normalizeNewsArticleInput(parsed.data);
+    const { isNew, ...articleFields } = normalized;
     await connectDb();
 
     const existing = await NewsArticle.findOne({ slug: normalized.slug }).select("_id");
@@ -40,7 +41,8 @@ export async function POST(request: Request) {
     }
 
     const article = await NewsArticle.create({
-      ...normalized,
+      ...articleFields,
+      highlightAsNew: isNew,
       blocks: [],
       createdBy: auth.session.sub,
     });

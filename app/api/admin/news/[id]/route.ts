@@ -61,7 +61,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     article.category = normalized.category;
     article.publishedAt = normalized.publishedAt;
     article.isPublished = normalized.isPublished;
-    article.isNew = normalized.isNew;
+    article.highlightAsNew = normalized.isNew;
+    article.set("isNew", undefined);
     await article.save();
 
     return NextResponse.json({
