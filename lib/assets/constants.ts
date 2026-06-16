@@ -9,11 +9,11 @@ export const READONLY_FOLDERS = new Set(["avatars"]);
 export const ROOT_FOLDER_LABELS: Record<string, string> = {
   avatars: "Student avatars (portal uploads)",
   research: "Research paper thumbnails",
-  news: "News images",
+  gallery: "Gallery images",
 };
 
 /** Default writable folders created for the asset library. */
-export const DEFAULT_ASSET_FOLDERS = ["news"] as const;
+export const DEFAULT_ASSET_FOLDERS = ["news", "gallery"] as const;
 
 export const MAX_ASSET_BYTES = 10 * 1024 * 1024;
 

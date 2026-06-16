@@ -29,6 +29,7 @@ const dashboardIcons: Record<DashboardIconKey, IconType> = {
   profile: HiOutlineUserCircle,
   papers: HiOutlineDocumentText,
   assets: HiOutlinePhoto,
+  gallery: HiOutlinePhoto,
 };
 
 type DashboardSidebarProps = {

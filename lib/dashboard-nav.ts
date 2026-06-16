@@ -1,4 +1,4 @@
-export type DashboardIconKey = "home" | "users" | "admins" | "editor" | "external" | "notices" | "profile" | "papers" | "assets";
+export type DashboardIconKey = "home" | "users" | "admins" | "editor" | "external" | "notices" | "profile" | "papers" | "assets" | "gallery";
 
 export type DashboardNavItem = {
   href: string;
@@ -39,6 +39,11 @@ export const adminNavItems: DashboardNavItem[] = [
     href: "/admin/news",
     label: "News",
     icon: "notices",
+  },
+  {
+    href: "/admin/gallery",
+    label: "Gallery",
+    icon: "gallery",
   },
   {
     href: "/editor",

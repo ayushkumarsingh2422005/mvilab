@@ -6,18 +6,37 @@ import { HiOutlineFolderOpen, HiOutlinePhoto } from "react-icons/hi2";
 import { Modal, ModalAlert } from "@/components/ui/Modal";
 import type { AssetDirectoryListing, AssetEntry } from "@/lib/assets/list";
 
-type AssetImagePickerProps = {
+type AssetImagePickerBaseProps = {
   open: boolean;
   initialListing: AssetDirectoryListing | null;
   onClose: () => void;
+};
+
+type AssetImagePickerSingleProps = AssetImagePickerBaseProps & {
+  multiple?: false;
   onSelect: (publicPath: string) => void;
 };
 
-export function AssetImagePicker({ open, initialListing, onClose, onSelect }: AssetImagePickerProps) {
+type AssetImagePickerMultipleProps = AssetImagePickerBaseProps & {
+  multiple: true;
+  onSelect: (publicPaths: string[]) => void;
+};
+
+type AssetImagePickerProps = AssetImagePickerSingleProps | AssetImagePickerMultipleProps;
+
+export function AssetImagePicker(props: AssetImagePickerProps) {
+  const { open, initialListing, onClose } = props;
+  const multiple = props.multiple === true;
   const [listing, setListing] = useState<AssetDirectoryListing | null>(initialListing);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedPath, setSelectedPath] = useState("");
+  const [selectedPaths, setSelectedPaths] = useState<string[]>([]);
+
+  function clearSelection() {
+    setSelectedPath("");
+    setSelectedPaths([]);
+  }
 
   async function loadDirectory(path: string) {
     setLoading(true);
@@ -33,7 +52,7 @@ export function AssetImagePicker({ open, initialListing, onClose, onSelect }: As
       }
 
       setListing(data.listing);
-      setSelectedPath("");
+      clearSelection();
     } catch {
       setError("Unable to load folder right now.");
     } finally {
@@ -48,24 +67,46 @@ export function AssetImagePicker({ open, initialListing, onClose, onSelect }: As
     }
 
     if (!entry.isImage) return;
+
+    if (multiple) {
+      setSelectedPaths((current) =>
+        current.includes(entry.publicPath)
+          ? current.filter((path) => path !== entry.publicPath)
+          : [...current, entry.publicPath],
+      );
+      return;
+    }
+
     setSelectedPath(entry.publicPath);
   }
 
   function confirmSelection() {
+    if (props.multiple === true) {
+      if (selectedPaths.length === 0) return;
+      props.onSelect(selectedPaths);
+      onClose();
+      return;
+    }
+
     if (!selectedPath) return;
-    onSelect(selectedPath);
+    props.onSelect(selectedPath);
     onClose();
   }
 
   const imageEntries =
     listing?.entries.filter((entry) => entry.kind === "folder" || entry.isImage) ?? [];
+  const selectionCount = multiple ? selectedPaths.length : selectedPath ? 1 : 0;
 
   return (
     <Modal
       open={open}
       onClose={onClose}
       title="Choose from assets"
-      description="Browse upload folders and pick an image for the paper thumbnail."
+      description={
+        multiple
+          ? "Browse upload folders and select one or more images."
+          : "Browse upload folders and pick an image."
+      }
       panelClassName="max-w-3xl"
     >
       {error ? <ModalAlert message={error} tone="error" /> : null}
@@ -102,7 +143,9 @@ export function AssetImagePicker({ open, initialListing, onClose, onSelect }: As
             ) : (
               <ul className="m-0 grid list-none gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
                 {imageEntries.map((entry) => {
-                  const isSelected = entry.kind === "file" && entry.publicPath === selectedPath;
+                  const isSelected =
+                    entry.kind === "file" &&
+                    (multiple ? selectedPaths.includes(entry.publicPath) : entry.publicPath === selectedPath);
 
                   return (
                     <li key={entry.path}>
@@ -148,14 +191,24 @@ export function AssetImagePicker({ open, initialListing, onClose, onSelect }: As
             )}
           </div>
 
-          {selectedPath ? (
+          {selectionCount > 0 ? (
             <p className="mt-4 mb-0 text-sm text-[#555]">
-              Selected: <code className="rounded bg-[#f7fbfc] px-1.5 py-0.5 text-xs">{selectedPath}</code>
+              {multiple ? (
+                <>
+                  Selected {selectionCount} image{selectionCount === 1 ? "" : "s"}.
+                </>
+              ) : (
+                <>
+                  Selected: <code className="rounded bg-[#f7fbfc] px-1.5 py-0.5 text-xs">{selectedPath}</code>
+                </>
+              )}
             </p>
           ) : (
             <p className="mt-4 mb-0 flex items-center gap-2 text-sm text-[#667]">
               <HiOutlinePhoto size={16} aria-hidden />
-              Open a folder or click an image to select it.
+              {multiple
+                ? "Open a folder or click images to select them."
+                : "Open a folder or click an image to select it."}
             </p>
           )}
 
@@ -170,10 +223,14 @@ export function AssetImagePicker({ open, initialListing, onClose, onSelect }: As
             <button
               type="button"
               onClick={confirmSelection}
-              disabled={!selectedPath}
+              disabled={selectionCount === 0}
               className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Use this image
+              {multiple
+                ? selectionCount === 1
+                  ? "Use 1 image"
+                  : `Use ${selectionCount} images`
+                : "Use this image"}
             </button>
           </div>
         </>
