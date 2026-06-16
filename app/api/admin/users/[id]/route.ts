@@ -74,12 +74,12 @@ export async function DELETE(_request: Request, context: RouteContext) {
     const { id } = await context.params;
     const result = await deleteManagedUser(id, auth.session.sub);
 
-    if ("error" in result) {
+    if (!result.ok) {
       const status = result.error.includes("not found") ? 404 : 400;
       return NextResponse.json({ error: result.error }, { status });
     }
 
-    return NextResponse.json({ ok: true, ...result });
+    return NextResponse.json({ ok: true, role: result.role, email: result.email });
   } catch (error) {
     console.error("Delete user failed:", error);
     return NextResponse.json({ error: "Unable to delete user right now." }, { status: 500 });

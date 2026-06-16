@@ -102,7 +102,10 @@ export function StudentManager({ initialStudents }: StudentManagerProps) {
   async function handleDelete(student: StudentRow) {
     const label = student.name ?? student.studentId ?? student.email;
     const confirmed = window.confirm(
-      `Permanently delete ${label}?\n\nThis removes their account, profile photo, and research paper links. This cannot be undone.`,
+      `Permanently delete ${label}?\n\n` +
+        "If they are linked to research papers with other co-authors, they will be removed from those papers. " +
+        "Deletion is blocked if they are the only author on any paper.\n\n" +
+        "This cannot be undone.",
     );
     if (!confirmed) return;
 

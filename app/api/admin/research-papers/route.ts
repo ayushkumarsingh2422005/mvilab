@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db/mongoose";
-import { User } from "@/lib/models/User";
 import { ResearchPaper } from "@/lib/models/ResearchPaper";
 import { requireSession } from "@/lib/auth/api";
 import { getAllResearchPapers, serializeResearchPaper } from "@/lib/research-papers";
+import { validateStudentAuthorIds } from "@/lib/research-papers/relations";
 import {
   createResearchPaperSchema,
   normalizeResearchPaperInput,
@@ -35,13 +35,9 @@ export async function POST(request: Request) {
     const normalized = normalizeResearchPaperInput(parsed.data);
     await connectDb();
 
-    const students = await User.find({
-      _id: { $in: normalized.studentIds },
-      role: "student",
-    }).select("_id");
-
-    if (students.length !== normalized.studentIds.length) {
-      return NextResponse.json({ error: "One or more selected students were not found." }, { status: 400 });
+    const authors = await validateStudentAuthorIds(normalized.studentIds);
+    if ("error" in authors) {
+      return NextResponse.json({ error: authors.error }, { status: 400 });
     }
 
     const paper = await ResearchPaper.create({
@@ -50,7 +46,7 @@ export async function POST(request: Request) {
       venue: normalized.venue,
       url: normalized.url,
       description: normalized.description,
-      students: students.map((student) => student._id),
+      students: authors.studentObjectIds,
       createdBy: auth.session.sub,
     });
 

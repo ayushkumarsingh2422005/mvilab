@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/db/mongoose";
-import { User } from "@/lib/models/User";
 import { ResearchPaper } from "@/lib/models/ResearchPaper";
 import { requireSession } from "@/lib/auth/api";
 import { serializeResearchPaper } from "@/lib/research-papers";
+import { validateStudentAuthorIds } from "@/lib/research-papers/relations";
 import {
   normalizeResearchPaperInput,
   updateResearchPaperSchema,
@@ -38,13 +38,9 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Research paper not found." }, { status: 404 });
     }
 
-    const students = await User.find({
-      _id: { $in: normalized.studentIds },
-      role: "student",
-    }).select("_id");
-
-    if (students.length !== normalized.studentIds.length) {
-      return NextResponse.json({ error: "One or more selected students were not found." }, { status: 400 });
+    const authors = await validateStudentAuthorIds(normalized.studentIds);
+    if ("error" in authors) {
+      return NextResponse.json({ error: authors.error }, { status: 400 });
     }
 
     paper.title = normalized.title;
@@ -52,7 +48,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     paper.venue = normalized.venue;
     paper.url = normalized.url;
     paper.description = normalized.description;
-    paper.students = students.map((student) => student._id);
+    paper.students = authors.studentObjectIds;
     await paper.save();
     await paper.populate("students", "name studentId slug email isActive role profile.designation profile.avatarUrl");
 
