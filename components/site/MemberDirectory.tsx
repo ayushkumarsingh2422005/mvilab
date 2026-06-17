@@ -17,36 +17,46 @@ export function MemberDirectory({ students }: MemberDirectoryProps) {
         {students.length === 0 ? (
           <p className="mt-8 text-[#667]">Member profiles will appear here once students are added.</p>
         ) : (
-          <ul className="mt-8 grid list-none gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {students.map((student) => (
               <li key={student.id}>
                 <Link
                   href={`/student/${student.slug}`}
-                  className="flex h-full flex-col rounded-2xl border border-[#e0eaed] bg-white p-5 no-underline shadow-sm transition hover:border-primary/30 hover:shadow-md"
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e0eaed] bg-white no-underline shadow-sm transition hover:border-primary/30 hover:shadow-md"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#e0eaed] bg-[#f7fbfc]">
-                      {student.avatarUrl ? (
-                        <Image src={student.avatarUrl} alt="" fill className="object-cover" sizes="64px" unoptimized />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xl font-bold text-primary">
-                          {student.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <h2 className="m-0 text-lg font-bold text-primary-dark">{student.name}</h2>
-                      {formatProfileSubtitle(student.designation, student.department) ? (
-                        <p className="mt-1 mb-0 text-sm text-[#667]">
-                          {formatProfileSubtitle(student.designation, student.department)}
-                        </p>
-                      ) : null}
-                    </div>
+                  <div className="relative aspect-square w-full overflow-hidden border-b border-[#e8eef0] bg-[#f7fbfc]">
+                    {student.avatarUrl ? (
+                      <Image
+                        src={student.avatarUrl}
+                        alt={student.name}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-primary-light text-5xl font-bold text-primary">
+                        {student.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                   </div>
-                  {student.researchInterests ? (
-                    <p className="mt-4 mb-0 line-clamp-3 text-sm leading-relaxed text-[#555]">{student.researchInterests}</p>
-                  ) : null}
-                  <span className="mt-4 text-sm font-semibold text-primary">View profile →</span>
+
+                  <div className="flex flex-1 flex-col p-5">
+                    <h2 className="m-0 text-lg font-bold text-primary-dark">{student.name}</h2>
+                    {formatProfileSubtitle(student.designation, student.department) ? (
+                      <p className="mt-1.5 mb-0 text-sm text-[#667]">
+                        {formatProfileSubtitle(student.designation, student.department)}
+                      </p>
+                    ) : null}
+                    {student.researchInterests ? (
+                      <p className="mt-3 mb-0 line-clamp-3 flex-1 text-sm leading-relaxed text-[#555]">
+                        {student.researchInterests}
+                      </p>
+                    ) : (
+                      <div className="flex-1" />
+                    )}
+                    <span className="mt-4 text-sm font-semibold text-primary">View profile →</span>
+                  </div>
                 </Link>
               </li>
             ))}

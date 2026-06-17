@@ -27,19 +27,28 @@ export function PublicStudentProfilePage({ student }: PublicStudentProfilePagePr
   return (
     <main id="main-content" className="py-10">
       <div className={`${siteContainerClass} space-y-6`}>
-        <section className="rounded-2xl border border-[#e0eaed] bg-white p-6 shadow-sm sm:p-8">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl border border-[#e0eaed] bg-[#f7fbfc]">
+        <section className="overflow-hidden rounded-2xl border border-[#e0eaed] bg-white shadow-sm">
+          <div className="mx-auto w-full max-w-xs border-b border-[#e8eef0] bg-[#f7fbfc] sm:max-w-sm">
+            <div className="relative aspect-square w-full overflow-hidden">
               {data.avatarUrl ? (
-                <Image src={data.avatarUrl} alt="" fill className="object-cover" sizes="128px" unoptimized />
+                <Image
+                  src={data.avatarUrl}
+                  alt={student.profile.name ?? student.slug}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 80vw, 384px"
+                  unoptimized
+                />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-primary">
+                <div className="flex h-full w-full items-center justify-center bg-primary-light text-6xl font-bold text-primary">
                   {(student.profile.name ?? student.slug).charAt(0).toUpperCase()}
                 </div>
               )}
             </div>
+          </div>
 
-            <div className="min-w-0 flex-1">
+          <div className="space-y-6 p-6 sm:p-8">
+            <div className="min-w-0 text-center sm:text-left">
               <h1 className="m-0 text-[2rem] font-bold text-primary-dark">{student.profile.name ?? student.slug}</h1>
               {formatProfileSubtitle(data.designation, data.department) ? (
                 <p className="mt-2 mb-0 text-base text-[#667]">
@@ -59,7 +68,6 @@ export function PublicStudentProfilePage({ student }: PublicStudentProfilePagePr
                 </p>
               ) : null}
             </div>
-          </div>
 
           {data.bio ? (
             <div className="mt-6 border-t border-[#ececec] pt-6">
