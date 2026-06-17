@@ -102,6 +102,7 @@ export function PublicStudentProfilePage({ student }: PublicStudentProfilePagePr
               </ul>
             </div>
           ) : null}
+          </div>
         </section>
 
         <ResearchPaperList papers={student.papers} title="Publications" />
