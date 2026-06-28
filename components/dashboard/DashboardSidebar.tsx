@@ -10,6 +10,7 @@ import {
   HiOutlineHome,
   HiOutlinePencilSquare,
   HiOutlinePhoto,
+  HiOutlineRectangleStack,
   HiOutlineShieldCheck,
   HiOutlineUserCircle,
   HiOutlineUsers,
@@ -30,6 +31,7 @@ const dashboardIcons: Record<DashboardIconKey, IconType> = {
   papers: HiOutlineDocumentText,
   assets: HiOutlinePhoto,
   gallery: HiOutlinePhoto,
+  hero: HiOutlineRectangleStack,
 };
 
 type DashboardSidebarProps = {

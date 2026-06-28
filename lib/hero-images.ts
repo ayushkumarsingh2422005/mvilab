@@ -7,7 +7,7 @@ export type HeroSlide = {
   mobileObjectPosition?: string;
 };
 
-export const heroImages: HeroSlide[] = [
+export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
     id: "one",
     alt: "Machine Vision and Intelligence Lab showcase",
@@ -21,6 +21,9 @@ export const heroImages: HeroSlide[] = [
     mobile: "/heroimages/mobile/two.png",
   },
 ];
+
+/** @deprecated Use getPublishedHeroSlidesForSite() or pass slides into HeroGallery. */
+export const heroImages = DEFAULT_HERO_SLIDES;
 
 export const HERO_IMAGE_DIRS = {
   desktop: "/heroimages/desktop",

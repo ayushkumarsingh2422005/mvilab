@@ -81,6 +81,17 @@ export default function AdminDashboardPage() {
           </Link>
 
           <Link
+            href="/admin/hero"
+            className="rounded-2xl border border-[#e0eaed] bg-white p-6 no-underline shadow-sm transition hover:border-primary/25 hover:shadow-md"
+          >
+            <p className="m-0 text-xs font-semibold uppercase tracking-wide text-primary">Homepage</p>
+            <h2 className="mt-2 mb-0 text-lg font-bold text-primary-dark">Hero banner</h2>
+            <p className="mt-2 mb-0 text-sm leading-relaxed text-[#667]">
+              Upload desktop and mobile carousel images for the homepage banner.
+            </p>
+          </Link>
+
+          <Link
             href="/editor"
             className="rounded-2xl border border-[#e0eaed] bg-white p-6 no-underline shadow-sm transition hover:border-primary/25 hover:shadow-md"
           >

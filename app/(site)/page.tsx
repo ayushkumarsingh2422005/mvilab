@@ -4,14 +4,18 @@ import { LabGroupPhoto } from "@/components/ui/LabGroupPhoto";
 import { LatestNews } from "@/components/ui/LatestNews";
 import { NewsTicker } from "@/components/ui/NewsTicker";
 import { WelcomeSection } from "@/components/ui/WelcomeSection";
+import { getPublishedHeroSlidesForSite } from "@/lib/hero-slides";
 import { getPublishedNewsArticles } from "@/lib/news";
 
 export default async function Home() {
-  const articles = await getPublishedNewsArticles(6);
+  const [articles, heroSlides] = await Promise.all([
+    getPublishedNewsArticles(6),
+    getPublishedHeroSlidesForSite(),
+  ]);
 
   return (
     <>
-      <HeroGallery />
+      <HeroGallery slides={heroSlides} />
       <NewsTicker articles={articles} />
 
       <main id="main-content">

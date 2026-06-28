@@ -19,10 +19,11 @@ export const ROOT_FOLDER_LABELS: Record<string, string> = {
   avatars: "Student avatars (portal uploads)",
   research: "Research paper thumbnails",
   gallery: "Gallery images",
+  hero: "Homepage hero banners",
 };
 
 /** Default writable folders created for the asset library. */
-export const DEFAULT_ASSET_FOLDERS = ["news", "gallery"] as const;
+export const DEFAULT_ASSET_FOLDERS = ["news", "gallery", "hero"] as const;
 
 export const MAX_ASSET_BYTES = 10 * 1024 * 1024;
 

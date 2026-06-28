@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { heroImages, type HeroSlide } from "@/lib/hero-images";
+import type { HeroSlide } from "@/lib/hero-images";
 
 const NAV_BTN_CLASS =
   "pointer-events-auto flex size-12 cursor-pointer items-center justify-center rounded-xl border border-white/30 bg-primary/90 text-white shadow-[0_4px_14px_rgba(10,95,107,0.35)] backdrop-blur-sm transition hover:border-white/50 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40 max-sm:size-10 max-sm:rounded-lg max-sm:shadow-[0_2px_10px_rgba(10,95,107,0.3)]";
@@ -79,7 +79,8 @@ function HeroSlideImage({ slide, priority }: { slide: HeroSlide; priority?: bool
   );
 }
 
-export function HeroGallery() {
+export function HeroGallery({ slides }: { slides: HeroSlide[] }) {
+  const heroImages = slides;
   const totalSlides = heroImages.length;
   const isInfinite = totalSlides > 1;
 

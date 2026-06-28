@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { navLinks } from "@/lib/content";
+import { navLinks, site } from "@/lib/content";
 import { siteContainerClass } from "@/lib/site-container";
 
 function navLinkClasses(active: boolean) {
@@ -147,6 +147,21 @@ export function SiteNav() {
         <div
           className={`nav-inner ${siteContainerClass} flex min-h-(--nav-height) items-stretch overflow-x-auto`}
         >
+          {pinned ? (
+            <Link
+              href="/"
+              className="nav-mobile-brand flex min-w-0 flex-1 flex-col justify-center overflow-hidden px-3 py-1 no-underline lg:hidden"
+              aria-label={`${site.shortName} home`}
+            >
+              <span className="truncate font-serif text-[0.88rem] font-bold leading-tight text-white max-sm:text-[0.82rem]">
+                {site.shortName}
+              </span>
+              <span className="truncate text-[0.65rem] font-medium leading-tight text-white/90 max-sm:text-[0.62rem]">
+                {site.shortSubtitle}
+              </span>
+            </Link>
+          ) : null}
+
           <div className="nav-emblem-spacer" aria-hidden="true" />
 
           <ul className="m-0 flex min-w-max list-none items-stretch gap-0 p-0 max-lg:hidden">
